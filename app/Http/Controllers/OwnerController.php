@@ -8,9 +8,18 @@ use App\Owner;
 class OwnerController extends Controller
 {
     public function create(){
-        $data = request()->validate([
-            'document' => 'required'
+        Owner::create($this->validateRequest());
+    }
+
+    public function update(Owner $owner){
+        $owner->update($this->validateRequest());
+    }
+
+    private function validateRequest(){
+        return request()->validate([
+            'first_name' => ['required'],
+            'last_name' => ['required'],
+            'document' => ['required', 'unique:owners']
         ]);
-        Owner::create($data);
     }
 }

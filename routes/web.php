@@ -13,4 +13,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/Owner/Create', 'OwnerController@create');
+Route::post('/Owner/Store', 'OwnerController@create');
+Route::patch('/Owner/Store/{owner}', 'OwnerController@update');
