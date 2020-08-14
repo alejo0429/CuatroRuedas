@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::post('/Owner/Store', 'OwnerController@create');
-Route::patch('/Owner/Store/{owner}', 'OwnerController@update');
+Route::group(['middleware' => ['cors']], function () {
+    Route::get('/Owner', 'OwnerController@index');
+    Route::post('/Owner/Store', 'OwnerController@create');
+    Route::patch('/Owner/Store/{owner}', 'OwnerController@update');
+});

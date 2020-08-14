@@ -15,8 +15,7 @@ class OwnerControllerTest extends TestCase
     public function checkIfCreatesOwner()
     {
         $response = $this->post('/Owner/Store', [
-            'first_name' => 'Alejandro',
-            'last_name' => 'Barragan',
+            'name' => 'Alejandro Barragan',
             'document' => '123456'
         ]);
         $response->assertOk();
@@ -27,98 +26,76 @@ class OwnerControllerTest extends TestCase
     public function documentIsRequired()
     {
         $response = $this->post('/Owner/Store', [
-            'first_name' => 'Alejandro',
-            'last_name' => 'Barragan',
+            'name' => 'Alejandro Barragan',
             'document' => ''
         ]);
         $response->assertSessionHasErrors('document');
     }
 
     /** @test */
-    public function firstNameIsRequired()
+    public function nameIsRequired()
     {
         $response = $this->post('/Owner/Store', [
-            'first_name' => '',
-            'last_name' => 'Barragan',
+            'name' => '',
             'document' => '123456'
         ]);
-        $response->assertSessionHasErrors('first_name');
-    }
-
-    /** @test */
-    public function lastNameIsRequired()
-    {
-        $response = $this->post('/Owner/Store', [
-            'first_name' => 'Alejandro',
-            'last_name' => '',
-            'document' => '123456'
-        ]);
-        $response->assertSessionHasErrors('last_name');
+        $response->assertSessionHasErrors('name');
     }
 
     /** @test */
     public function checkIfUpdatesOwner()
     {
         $this->post('/Owner/Store', [
-            'first_name' => 'Alejandro',
-            'last_name' => 'Barragan',
+            'name' => 'Alejandro Barragan',
             'document' => '123456'
         ]);
         $owner = Owner::first();
 
         $response = $this->patch("/Owner/Store/$owner->id", [
-            'first_name' => 'Manuel',
-            'last_name' => 'Velasquez',
+            'name' => 'Manuel Velasquez',
             'document' => '123456789'
         ]);
-        $this->assertEquals('Manuel', Owner::first()->first_name);
-        $this->assertEquals('Velasquez', Owner::first()->last_name);
+        $this->assertEquals('Manuel Velasquez', Owner::first()->name);
         $this->assertEquals('123456789', Owner::first()->document);
     }
 
     /** @test */
-    public function checksUniqueDocumentCreating()
+    public function documentIsUniqueCreating()
     {
         $this->post('/Owner/Store', [
-            'first_name' => 'Alejandro',
-            'last_name' => 'Barragan',
+            'name' => 'Alejandro Barragan',
             'document' => '123456'
         ]);
 
         $this->post("/Owner/Store", [
-            'first_name' => 'Marcela',
-            'last_name' => 'Rojas',
+            'name' => 'Marcela Rojas',
             'document' => '123456789'
         ]);
 
         $response = $this->post("/Owner/Store", [
-            'first_name' => 'Manuel',
-            'last_name' => 'Velasquez',
+            'name' => 'Manuel Velasquez',
             'document' => '123456'
         ]);
         $response->assertSessionHasErrors();
     }
 
     /** @test */
-    public function checksUniqueDocumentUpdating()
+    public function documentIsUniqueUpdating()
     {
         $this->post('/Owner/Store', [
-            'first_name' => 'Alejandro',
-            'last_name' => 'Barragan',
+            'name' => 'Alejandro Barragan',
             'document' => '123456'
         ]);
 
         $owner = Owner::first();
 
         $this->post("/Owner/Store", [
-            'first_name' => 'Marcela',
-            'last_name' => 'Rojas',
+            'name' => 'Marcela Rojas',
             'document' => '123456789'
         ]);
 
         $response = $this->patch("/Owner/Store/$owner->id", [
-            'first_name' => 'Alejandro',
-            'last_name' => 'Barragan',
+            'name' => 'Alejandro Barragan',
             'document' => '123456'
         ]);
         $response->assertSessionHasErrors();
